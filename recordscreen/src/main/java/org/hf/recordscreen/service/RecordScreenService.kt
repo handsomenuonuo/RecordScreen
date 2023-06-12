@@ -241,10 +241,10 @@ internal class RecordScreenService : Service() {
 
     private fun initNotification() {
         val mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val builder  = NotificationCompat.Builder(applicationContext,"com.antoco.srcreenrecord")
+        val builder  = NotificationCompat.Builder(applicationContext,"org.hf.srcreenrecord")
         //  兼容代码
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val CHANNEL_ONE_ID = "com.creyond.tram.service.DownloadAppService"
+            val CHANNEL_ONE_ID = "org.hf.RecordScreenService"
             val CHANNEL_ONE_NAME = "Channel ONE"
             // 改方法是 Android 8.0 以后才有的
             builder.setChannelId(CHANNEL_ONE_ID)
@@ -262,7 +262,7 @@ internal class RecordScreenService : Service() {
         builder
             .setTicker("正在录制屏幕...") // statusBar上的提示
             .setContentTitle("正在录制屏幕...") // 设置下拉列表里的标题
-            .setSmallIcon(R.mipmap.ic_launcher) // 设置状态栏内的小图标24X24
+            .setSmallIcon(R.mipmap.ic_record) // 设置状态栏内的小图标24X24
             .setWhen(System.currentTimeMillis()) // 设置该通知发生的时间
             .setPriority(NotificationCompat.PRIORITY_HIGH) //优先级高
             .setAutoCancel(false)
