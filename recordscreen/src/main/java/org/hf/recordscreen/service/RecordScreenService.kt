@@ -16,7 +16,10 @@ import android.media.MediaMuxer
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.os.Message
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Surface
@@ -156,15 +159,6 @@ internal class RecordScreenService : Service() {
                         videoTrackIndex = mediaMuxer!!.addTrack(encoder!!.outputFormat)
                         mediaMuxer!!.start()
                         /**************这两段吊代码，为什么不放在这儿就出错！！！******************/
-
-//                        /**这里保存下sps 和 pps */
-//                        val spsb: ByteBuffer? = encoder!!.outputFormat.getByteBuffer("csd-0")
-//                        sps = ByteArray(spsb!!.remaining())
-//                        spsb.get(sps!! ,0, sps!!.size)
-//
-//                        val ppsb: ByteBuffer? = encoder!!.outputFormat.getByteBuffer("csd-1")
-//                        pps = ByteArray(ppsb!!.remaining())
-//                        ppsb.get(pps!!, 0, pps!!.size)
                     }else if (outputBufferIndex == MediaCodec.INFO_TRY_AGAIN_LATER){
                         try {
                             Thread.sleep(10)

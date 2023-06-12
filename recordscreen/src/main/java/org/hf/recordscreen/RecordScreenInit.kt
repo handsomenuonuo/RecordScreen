@@ -19,8 +19,10 @@ import org.hf.recordscreen.context.RecordScreenContextImpl.Companion.application
 import org.hf.recordscreen.context.RecordScreenContextImpl.Companion.initRecordScreen
 import org.hf.recordscreen.context.RecordScreenContextImpl.Companion.toast
 import java.lang.ref.WeakReference
+import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.functions
+import kotlin.reflect.full.starProjectedType
 
 /**********************************
  * @Name:         Ext
@@ -88,11 +90,11 @@ private fun decodeAnnotation(activity : AppCompatActivity) {
 
 fun AppCompatActivity.initRecordScreenPlugin(recordScreenConfig : RecordScreenConfig?=null) {
     val recordContext = initRecordScreen(this,recordScreenConfig)
-    val functions = this::class.functions
+    val functions = this::class.declaredFunctions
     for (f in functions) {
         val parameters = f.parameters
         val returnType = f.returnType
-        if(parameters.isNotEmpty() || !returnType.isMarkedNullable){
+        if(parameters.size > 1 || returnType != Unit::class.starProjectedType) {
             continue
         }
         val start = f.findAnnotation<RecordScreenStart>()

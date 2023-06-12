@@ -90,14 +90,22 @@ internal class RecordScreenContextImpl : RecordScreenContext{
         object : RecordScreenListener.Stub(){
             override fun onStartRecord() {
                 callBack?.get()?.onStartRecord()
-                startFunction?.call(activity?.get())
+                try {
+                    startFunction?.call(activity?.get())
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
                 isRecord = true
             }
 
             override fun onStopRecord() {
                 isRecord = false
                 callBack?.get()?.onStopRecord()
-                stopFunction?.call(activity?.get())
+                try {
+                    stopFunction?.call(activity?.get())
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
                 callBack = null
                 application?.get()?.unbindService(serviceConnection)
             }
