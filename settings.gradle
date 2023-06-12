@@ -15,5 +15,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "RecordScreen"
-include ':app'
+//include ':app'
 include ':recordscreen'
