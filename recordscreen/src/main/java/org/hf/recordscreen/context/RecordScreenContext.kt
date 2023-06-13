@@ -13,10 +13,6 @@ import org.hf.recordscreen.bean.RecordScreenConfig
  **********************************/
 abstract class RecordScreenContext{
 
-     var config : RecordScreenConfig?= null
-
-     abstract fun startRecordScreen(listener : RecordScreenCallback?)
-
      abstract fun stopRecordScreen()
 
 }

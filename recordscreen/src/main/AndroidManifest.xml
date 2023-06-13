@@ -7,6 +7,12 @@
         <service android:name=".service.RecordScreenService"
             android:process=":record_screen"
             android:foregroundServiceType="mediaProjection"/>
+
+        <activity
+            android:name=".activity.ProxyActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@style/OnePxActivityStyle"/>
     </application>
 
 
