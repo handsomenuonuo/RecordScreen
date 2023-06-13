@@ -16,15 +16,14 @@ import android.media.MediaMuxer
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
-import android.os.Message
+import android.os.ParcelFileDescriptor
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Surface
 import androidx.activity.result.ActivityResult
 import androidx.core.app.NotificationCompat
+import androidx.core.content.PackageManagerCompat.LOG_TAG
 import org.hf.recordscreen.IRecordScreenAidlInterface
 import org.hf.recordscreen.R
 import org.hf.recordscreen.RecordScreenListener
@@ -56,8 +55,8 @@ internal class RecordScreenService : Service() {
     private var VIDEO_FRAME_RATE = 0
     private var VIDEO_IFRAME_INTERVAL = 0
 
-    private var VIDEO_NAME = ""
-    private var VIDEO_PATH = ""
+    private var VIDEO_PATH :String ?= null
+    private var VIDEO_FILE_DESCRIPTOR : ParcelFileDescriptor ?= null
 
     private var encoder : MediaCodec? = null
     private var mediaMuxer : MediaMuxer ?= null
@@ -74,6 +73,7 @@ internal class RecordScreenService : Service() {
     private var outVideoPath :String ? = null
 
     private var virtualDisplay : VirtualDisplay? = null
+    private var config : RecordScreenConfig? = null
 
     private val binder : IRecordScreenAidlInterface.Stub by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED){
         object : IRecordScreenAidlInterface.Stub() {
@@ -82,47 +82,71 @@ internal class RecordScreenService : Service() {
                 startRecordThread()
             }
 
+            override fun setRecordConfig(recordScreenConfig: RecordScreenConfig?) {
+               Log.e("test", "setRecordConfig = $recordScreenConfig")
+                config = recordScreenConfig
+            }
+
+
             override fun stopRecord() {
                 isStarted = false
             }
         }
     }
 
+
     override fun onBind(intent: Intent?): IBinder {
         val result = intent!!.getParcelableExtra<ActivityResult>("result")!!
-        val config = intent.getParcelableExtra<RecordScreenConfig>("config")
+        mediaProjection = (getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager)
+            .getMediaProjection(result.resultCode, result.data!!)
+        initCodec()
+        createVirtualDisplay()
+        return binder
+    }
+
+    private fun initMediaMuxer() {
         config?.let {
             VIDEO_WIDTH = it.videoWidth
             VIDEO_HEIGHT = it.videoHeight
             VIDEO_BITRATE = it.videoBitRate
             VIDEO_FRAME_RATE = it.videoFrameRate
             VIDEO_IFRAME_INTERVAL = it.videoIFrameInterval
-            VIDEO_NAME = it.videoName
+            VIDEO_FILE_DESCRIPTOR= it.videoFileDescriptor
             VIDEO_PATH = it.videoPath
         }
-        mediaProjection = (getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager)
-            .getMediaProjection(result.resultCode, result.data!!)
-        initCodec()
-        createVirtualDisplay()
-        initMediaMuxer()
-        return binder
-    }
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if(VIDEO_FILE_DESCRIPTOR != null){
+                    outVideoPath = VIDEO_FILE_DESCRIPTOR!!.fileDescriptor.toString()
+                    Log.i("RecordScreenService","保存视频到1： $outVideoPath")
+                    mediaMuxer = MediaMuxer(VIDEO_FILE_DESCRIPTOR!!.fileDescriptor, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+                    return
+                }
+            }
+            if(VIDEO_PATH!= null){
+                outVideoPath = VIDEO_PATH
+                Log.i("RecordScreenService","保存视频到2： $outVideoPath")
+                mediaMuxer = MediaMuxer(outVideoPath!!, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+            }else{
+                VIDEO_PATH = getExternalFilesDir("recordVideos").toString()
+                outVideoPath = VIDEO_PATH + File.separator + "${System.currentTimeMillis()}.mp4"
+                Log.i("RecordScreenService","保存视频到3： $outVideoPath")
+                mediaMuxer = MediaMuxer(outVideoPath!!, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+            }
+        }catch (e: Exception){
+            e.printStackTrace()
+            stopSelf()
+        }
 
-    private fun initMediaMuxer() {
-        if(VIDEO_NAME.isNullOrEmpty())VIDEO_NAME = "${System.currentTimeMillis()}.mp4"
-        if(VIDEO_PATH.isNullOrEmpty())VIDEO_PATH = getExternalFilesDir("recordVideos").toString()
-        outVideoPath = VIDEO_PATH + File.separator + VIDEO_NAME
-        Log.i("RecordScreenService","保存视频到： $outVideoPath")
-        mediaMuxer = MediaMuxer(outVideoPath!!, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
     }
 
     override fun onCreate() {
         super.onCreate()
         initNotification()
-
     }
 
     private fun startRecordThread(){
+        initMediaMuxer()
         recordThread = thread{
             try {
                 isStarted = true
@@ -185,6 +209,7 @@ internal class RecordScreenService : Service() {
                 e.printStackTrace()
             }finally {
                 recordScreenListener?.onStopRecord()
+                VIDEO_FILE_DESCRIPTOR?.close()
                 recordScreenListener = null
                 videoBufferInfo = null
             }

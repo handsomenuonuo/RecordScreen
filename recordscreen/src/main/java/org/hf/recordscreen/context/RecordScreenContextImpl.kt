@@ -118,6 +118,7 @@ internal class RecordScreenContextImpl : RecordScreenContext{
                 service?.let {
                     binder = IRecordScreenAidlInterface.Stub.asInterface(it)
                 }
+                binder?.setRecordConfig(config)
                 binder?.setListener(listener)
             }
 
@@ -140,9 +141,6 @@ internal class RecordScreenContextImpl : RecordScreenContext{
                     Log.i(tag,"允许录制屏幕。。。。")
                     val intent = Intent(application?.get(), RecordScreenService::class.java)
                     intent.putExtra("result",result)
-                    config?.let {
-                        intent.putExtra("config",it)
-                    }
                     application?.get()?.bindService(intent, serviceConnection, Service.BIND_AUTO_CREATE)
                 }else{
                     callBack = null

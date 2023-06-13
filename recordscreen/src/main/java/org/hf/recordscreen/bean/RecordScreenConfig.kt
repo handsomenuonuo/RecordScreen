@@ -1,5 +1,6 @@
 package org.hf.recordscreen.bean
 
+import android.os.ParcelFileDescriptor
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -18,8 +19,8 @@ data class RecordScreenConfig(
     var videoBitRate  :Int = 0,
     var videoFrameRate  :Int = 0,
     var videoIFrameInterval  :Int = 0,
-    var videoName:String="",
-    var videoPath:String="",
+    var videoPath:String?=null,
+    var videoFileDescriptor: ParcelFileDescriptor?=null
 ) : Parcelable {
 
     fun setVideoWidthHeight(width: Int,height: Int): RecordScreenConfig {
@@ -43,13 +44,13 @@ data class RecordScreenConfig(
         return this
     }
 
-    fun setVideoName(name: String): RecordScreenConfig {
-        videoName = name
+    fun setVideoPath(path: String): RecordScreenConfig {
+        videoPath = path
         return this
     }
 
-    fun setVideoPath(path: String): RecordScreenConfig {
-        videoPath = path
+    fun setVideoFileDescriptor(fileDescriptor: ParcelFileDescriptor): RecordScreenConfig {
+        videoFileDescriptor = fileDescriptor
         return this
     }
 

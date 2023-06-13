@@ -6,7 +6,6 @@ import android.app.Application
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import org.hf.recordscreen.annotation.RecordScreen
 import org.hf.recordscreen.annotation.RecordScreenStart
@@ -21,7 +20,6 @@ import org.hf.recordscreen.context.RecordScreenContextImpl.Companion.toast
 import java.lang.ref.WeakReference
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.functions
 import kotlin.reflect.full.starProjectedType
 
 /**********************************
