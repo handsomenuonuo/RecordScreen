@@ -255,6 +255,15 @@ internal class RecordScreenService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        try {
+            mediaMuxer?.let {
+                it.stop()
+                it.release()
+                mediaMuxer = null
+            }
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
         exitProcess(0)
     }
 
