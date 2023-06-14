@@ -3,6 +3,15 @@
   
 一个录屏库，超级简单的使用方法！相比1.0版本，简化了使用方式！
 
+## 2.1更新了什么
+* 修改部分Bug
+* 新增内置悬浮框，通过[RecordScreenConfig.useFloatingView]()配置
+* 新增录制时长回调
+* 新增录制失败时的回调
+* 新增录制时间控制，通过[RecordScreenConfig.totalRecordTime]()配置
+* 新增录制分段控制，通过[RecordScreenConfig.perSectionTime]()配置
+* 注意:___分段只针对设置确定的存储路径有效！___
+
 ## 导入方法
 ```gradle
 repositories {
