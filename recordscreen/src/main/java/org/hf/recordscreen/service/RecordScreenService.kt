@@ -411,6 +411,11 @@ internal class RecordScreenService : Service() {
             layoutParams.format = PixelFormat.RGBA_8888
             layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT
             layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                layoutParams.fitInsetsTypes = 0
+            }else{
+                layoutParams.flags = layoutParams.flags or WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+            }
             layoutParams.x =40
             layoutParams.y = 40
             val layoutInflater = LayoutInflater.from(this)
