@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:padding="5dp"
+    android:gravity="center"
+    android:background="@drawable/shape_floating_view_bg"
+    android:layout_height="wrap_content">
+
+   <ImageView
+       android:layout_marginStart="5dp"
+       android:id="@+id/img_start"
+       android:foreground="?android:attr/selectableItemBackground"
+       android:background="@drawable/shape_floating_view_bg"
+       android:src="@mipmap/ic_record"
+       android:layout_width="30dp"
+       android:layout_height="30dp"/>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="10dp"
+        android:textColor="#aaff0000"
+        android:textSize="16sp"
+        android:text="00:00:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

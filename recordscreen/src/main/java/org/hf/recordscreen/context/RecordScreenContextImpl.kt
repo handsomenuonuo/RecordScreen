@@ -7,7 +7,10 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import org.hf.recordscreen.IRecordScreenAidlInterface
@@ -39,7 +42,7 @@ internal class RecordScreenContextImpl : RecordScreenContext{
         var callBack : WeakReference<RecordScreenCallback>? = null
 
         @JvmStatic
-        var config : WeakReference<RecordScreenConfig>?= null
+        var config : RecordScreenConfig?= null
 
         @JvmStatic
         var recordContext : WeakReference<RecordScreenContextImpl> ?= null
@@ -50,8 +53,12 @@ internal class RecordScreenContextImpl : RecordScreenContext{
         }
 
         @JvmStatic
-        fun bindRecordScreenService(app: Application,result:ActivityResult){
+        fun bindApplication(app: Application){
             application = WeakReference(app)
+        }
+
+        @JvmStatic
+        fun bindRecordScreenService(app: Application,result:ActivityResult){
             val rContext = RecordScreenContextImpl()
             val intent = Intent(application?.get(), RecordScreenService::class.java)
             intent.putExtra("result",result)
@@ -98,6 +105,14 @@ internal class RecordScreenContextImpl : RecordScreenContext{
                 isRecord = true
             }
 
+            override fun onRecordTime(time: Int){
+                callBack?.get()?.onRecordTime(time)
+            }
+
+            override fun onRecordFailure(error : String) {
+                callBack?.get()?.onRecordFailure(error)
+            }
+
             override fun onStopRecord() {
                 isRecord = false
                 callBack?.get()?.onStopRecord()
@@ -120,7 +135,7 @@ internal class RecordScreenContextImpl : RecordScreenContext{
                 service?.let {
                     binder = IRecordScreenAidlInterface.Stub.asInterface(it)
                 }
-                binder?.setRecordConfig(config?.get())
+                binder?.setRecordConfig(config)
                 binder?.setListener(listener)
             }
 

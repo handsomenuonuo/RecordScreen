@@ -19,7 +19,10 @@ data class RecordScreenConfig(
     var videoBitRate  :Int = 0,
     var videoFrameRate  :Int = 0,
     var videoIFrameInterval  :Int = 0,
+    var perSectionTime :Int= 0,
+    var totalRecordTime :Int= 0,
     var videoPath:String?=null,
+    var useFloatingView  : Boolean = true,
     var videoFileDescriptor: ParcelFileDescriptor?=null
 ) : Parcelable {
 
@@ -41,6 +44,21 @@ data class RecordScreenConfig(
 
     fun setVideoIFrameInterval(interval: Int): RecordScreenConfig {
         videoIFrameInterval = interval
+        return this
+    }
+
+    fun setUseFloatingView(useFloatingView: Boolean): RecordScreenConfig {
+        this.useFloatingView = useFloatingView
+        return this
+    }
+
+    fun setPerSectionTime(perSectionTime: Int): RecordScreenConfig {
+        this.perSectionTime = perSectionTime
+        return this
+    }
+
+    fun setTotalRecordTime(totalRecordTime: Int): RecordScreenConfig {
+        this.totalRecordTime = totalRecordTime
         return this
     }
 

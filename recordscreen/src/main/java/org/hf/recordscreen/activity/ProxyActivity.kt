@@ -1,10 +1,15 @@
 package org.hf.recordscreen.activity
 
+import android.content.Intent
 import android.media.projection.MediaProjectionManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import org.hf.recordscreen.context.RecordScreenContextImpl
 
@@ -18,6 +23,8 @@ import org.hf.recordscreen.context.RecordScreenContextImpl
  **********************************/
 internal class ProxyActivity : AppCompatActivity() {
 
+    private lateinit var fLauncher : ActivityResultLauncher<Intent>
+    private lateinit var pLauncher : ActivityResultLauncher<Intent>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val window = window
@@ -32,18 +39,50 @@ internal class ProxyActivity : AppCompatActivity() {
         params.height = 1
         params.width = 1
         window.attributes = params
-
-        val aLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        RecordScreenContextImpl.bindApplication(application)
+        fLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+            if(!Settings.canDrawOverlays(this)){
+                RecordScreenContextImpl.toast("需要开启悬浮框权限！")
+                finish()
+                return@registerForActivityResult
+            }
+            requireProjectionPermission()
+        }
+        pLauncher =  registerForActivityResult(StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 RecordScreenContextImpl.bindRecordScreenService(application,result)
-                finish()
             }else{
                 RecordScreenContextImpl.release()
                 RecordScreenContextImpl.toast("需要点击允许，才能进行屏幕录制")
             }
+            finish()
         }
+
+        checkFloatingPermission()
+    }
+
+    private fun checkFloatingPermission(){
+        RecordScreenContextImpl.config?.let {
+            if(it.useFloatingView){
+                if(!Settings.canDrawOverlays(this)){
+                    RecordScreenContextImpl.toast("需要开启悬浮框权限！")
+                    requireFloatingPermission()
+                    return
+                }
+            }
+            requireProjectionPermission()
+        }
+    }
+
+    private fun requireFloatingPermission(){
+        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+        intent.data = Uri.parse("package:$packageName")
+        fLauncher.launch(intent)
+    }
+
+    private fun requireProjectionPermission(){
         val mediaProjectionManager = getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         val permissionIntent = mediaProjectionManager.createScreenCaptureIntent()
-        aLauncher.launch(permissionIntent)
+        pLauncher.launch(permissionIntent)
     }
 }

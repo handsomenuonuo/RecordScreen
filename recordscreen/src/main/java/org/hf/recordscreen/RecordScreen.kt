@@ -29,7 +29,7 @@ fun AppCompatActivity.startRecordScreen(
     if(RecordScreenContextImpl.isRecord(application)){
         return false
     }
-    RecordScreenContextImpl.config = WeakReference(recordScreenConfig)
+    RecordScreenContextImpl.config = recordScreenConfig
     RecordScreenContextImpl.callBack = WeakReference(listener)
     startActivity(Intent(this,ProxyActivity::class.java))
     return true
