@@ -253,7 +253,7 @@ internal class RecordScreenService : Service() {
             }catch (e : Exception){
                 e.printStackTrace()
             }finally {
-                if(!stopByAuto || (time >= totalRecordTime-4) ){
+                if(!stopByAuto || ((totalRecordTime > 0)&&(time >= totalRecordTime-4))){
                     mediaProjection?.let {
                         it.stop()
                         mediaProjection = null
