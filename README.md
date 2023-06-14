@@ -20,7 +20,7 @@ repositories {
 ```
 ```gradle
 dependencies {
-    implementation 'com.github.handsomenuonuo:RecordScreen:2.0.0'
+    implementation 'com.github.handsomenuonuo:RecordScreen:2.1.1'
 }
 ```
 
