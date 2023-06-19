@@ -42,6 +42,7 @@ internal class ProxyActivity : AppCompatActivity() {
         RecordScreenContextImpl.bindApplication(application)
         fLauncher = registerForActivityResult(StartActivityForResult()) { result ->
             if(!Settings.canDrawOverlays(this)){
+                RecordScreenContextImpl.callBack?.get()?.onRecordFailure("需要开启悬浮框权限！")
                 RecordScreenContextImpl.toast("需要开启悬浮框权限！")
                 finish()
                 return@registerForActivityResult
@@ -52,6 +53,7 @@ internal class ProxyActivity : AppCompatActivity() {
             if (result.resultCode == RESULT_OK) {
                 RecordScreenContextImpl.bindRecordScreenService(application,result)
             }else{
+                RecordScreenContextImpl.callBack?.get()?.onRecordFailure("需要点击允许，才能进行屏幕录制")
                 RecordScreenContextImpl.release()
                 RecordScreenContextImpl.toast("需要点击允许，才能进行屏幕录制")
             }
