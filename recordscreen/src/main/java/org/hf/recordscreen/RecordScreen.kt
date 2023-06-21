@@ -1,7 +1,7 @@
 package org.hf.recordscreen
 
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import org.hf.recordscreen.activity.ProxyActivity
 import org.hf.recordscreen.bean.RecordScreenCallback
 import org.hf.recordscreen.bean.RecordScreenConfig
@@ -16,13 +16,13 @@ import java.lang.ref.WeakReference
  * @Version：    1.0
  * @Describe:
  **********************************/
-fun AppCompatActivity.startRecordScreen(
+fun Activity.startRecordScreen(
     listener: RecordScreenCallback
 ){
     startRecordScreen(listener,null)
 }
 
-fun AppCompatActivity.startRecordScreen(
+fun Activity.startRecordScreen(
     listener: RecordScreenCallback,
     recordScreenConfig: RecordScreenConfig? = null
 ):Boolean{
