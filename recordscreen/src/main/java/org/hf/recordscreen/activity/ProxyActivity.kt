@@ -72,8 +72,8 @@ internal class ProxyActivity : AppCompatActivity() {
                     return
                 }
             }
-            requireProjectionPermission()
         }
+        requireProjectionPermission()
     }
 
     private fun requireFloatingPermission(){
