@@ -25,52 +25,52 @@ data class RecordScreenConfig(
     var useFloatingView  : Boolean = true,
     var videoFileDescriptor: ParcelFileDescriptor?=null
 ) : Parcelable {
-
-    fun setVideoWidthHeight(width: Int,height: Int): RecordScreenConfig {
-        videoWidth = width
-        videoHeight = height
-        return this
-    }
-
-    fun setVideoBitRate(bitrate: Int): RecordScreenConfig {
-        videoBitRate = bitrate
-        return this
-    }
-
-    fun setVideoFrameRate(frameRate: Int): RecordScreenConfig {
-        videoFrameRate = frameRate
-        return this
-    }
-
-    fun setVideoIFrameInterval(interval: Int): RecordScreenConfig {
-        videoIFrameInterval = interval
-        return this
-    }
-
-    fun setUseFloatingView(useFloatingView: Boolean): RecordScreenConfig {
-        this.useFloatingView = useFloatingView
-        return this
-    }
-
-    fun setPerSectionTime(perSectionTime: Int): RecordScreenConfig {
-        this.perSectionTime = perSectionTime
-        return this
-    }
-
-    fun setTotalRecordTime(totalRecordTime: Int): RecordScreenConfig {
-        this.totalRecordTime = totalRecordTime
-        return this
-    }
-
-    fun setVideoPath(path: String): RecordScreenConfig {
-        videoPath = path
-        return this
-    }
-
-    fun setVideoFileDescriptor(fileDescriptor: ParcelFileDescriptor): RecordScreenConfig {
-        videoFileDescriptor = fileDescriptor
-        return this
-    }
+//
+//    fun setVideoWidthHeight(width: Int,height: Int): RecordScreenConfig {
+//        videoWidth = width
+//        videoHeight = height
+//        return this
+//    }
+//
+//    fun setVideoBitRate(bitrate: Int): RecordScreenConfig {
+//        videoBitRate = bitrate
+//        return this
+//    }
+//
+//    fun setVideoFrameRate(frameRate: Int): RecordScreenConfig {
+//        videoFrameRate = frameRate
+//        return this
+//    }
+//
+//    fun setVideoIFrameInterval(interval: Int): RecordScreenConfig {
+//        videoIFrameInterval = interval
+//        return this
+//    }
+//
+//    fun setUseFloatingView(useFloatingView: Boolean): RecordScreenConfig {
+//        this.useFloatingView = useFloatingView
+//        return this
+//    }
+//
+//    fun setPerSectionTime(perSectionTime: Int): RecordScreenConfig {
+//        this.perSectionTime = perSectionTime
+//        return this
+//    }
+//
+//    fun setTotalRecordTime(totalRecordTime: Int): RecordScreenConfig {
+//        this.totalRecordTime = totalRecordTime
+//        return this
+//    }
+//
+//    fun setVideoPath(path: String): RecordScreenConfig {
+//        videoPath = path
+//        return this
+//    }
+//
+//    fun setVideoFileDescriptor(fileDescriptor: ParcelFileDescriptor): RecordScreenConfig {
+//        videoFileDescriptor = fileDescriptor
+//        return this
+//    }
 
 
 }
